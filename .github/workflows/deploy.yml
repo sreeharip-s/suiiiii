@@ -1,44 +1,47 @@
-name: 'Deploy Website'
+name: Deploy to GitHub Pages
 
-# Trigger Configuration
 on:
   push:
-    branches: ['main']
+    branches:
+      - main  # change if your main branch is named differently
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  # Build Job
   build:
-    name: 'Build'
     runs-on: ubuntu-latest
+
     steps:
-      - name: 'Checkout Code'
-        uses: actions/checkout@v5
-      - name: 'Setup Node'
-        uses: actions/setup-node@v6
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      - name: 'Build Website'
-        run: npm ci && npm run build
-      - name: 'Upload artifact'
-        uses: actions/upload-pages-artifact@v4
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: ./doc
-  # Deploy Job
+          path: ./dist  # change if your build output folder is different!
+
   deploy:
-    name: 'Deploy'
     needs: build
-    permissions:
-      pages: write
-      id-token: write
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: 'Deploy to GitHub Pages'
+      - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
