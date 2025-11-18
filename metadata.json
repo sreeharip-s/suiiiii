@@ -1,0 +1,5 @@
+{
+  "name": "Interactive Python Basics",
+  "description": "An interactive, dark-mode study guide for the fundamentals of Python, built with React and Tailwind CSS. Explore concepts like tokens, keywords, operators, and more through a sleek, modern interface.",
+  "requestFramePermissions": []
+}
