@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # change if your main branch is named differently
+      - main  # or master
 
 permissions:
   contents: read
@@ -15,24 +15,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repo
+      - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install deps
         run: npm install
 
       - name: Build
         run: npm run build
 
+      # 🔥 FIXED THIS LINE — MUST BE v4!!!
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          path: ./dist  # change if your build output folder is different!
+          name: github-pages
+          path: ./dist
 
   deploy:
     needs: build
@@ -42,6 +44,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      # 🔥 also make sure this one is v4!!
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
