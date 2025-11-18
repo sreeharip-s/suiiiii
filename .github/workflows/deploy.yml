@@ -29,10 +29,10 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload build as artifact
+      - name: Upload artifact  # ⬅️ FIXED THIS NAME
         uses: actions/upload-artifact@v4
         with:
-          name: vite-build
+          name: github-pages       # MUST MATCH BELOW
           path: ./dist
 
   deploy:
@@ -46,7 +46,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: vite-build
+          name: github-pages       # MUST MATCH ABOVE!!!!!!
 
       - name: Deploy to GitHub Pages
         id: deployment
